@@ -8,8 +8,35 @@ import (
 	openapi_types "github.com/oapi-codegen/runtime/types"
 )
 
-// RequestYakiimoNotification 焼き芋通知焼き上がり通知パラメータ
-type RequestYakiimoNotification struct {
+// TargetUserData 対象会員データ
+type TargetUserData struct {
+	// Email メールアドレス
+	Email string `json:"email"`
+
+	// NotificationPermission 通知許可
+	NotificationPermission bool `json:"notification_permission"`
+
+	// UserId 会員ID
+	UserId openapi_types.UUID `json:"user_id"`
+}
+
+// TargetUsersErrorResponse 対象会員取得成功レスポンス
+type TargetUsersErrorResponse struct {
+	// Message エラーメッセージ
+	Message interface{} `json:"message,omitempty"`
+}
+
+// TargetUsersResponse 対象会員取得成功レスポンス
+type TargetUsersResponse struct {
+	// Status 処理終了ステータス
+	Status int `json:"status"`
+
+	// Users 対象会員
+	Users []TargetUserData `json:"users"`
+}
+
+// YakiimoNotificationRequest 焼き芋通知焼き上がり通知パラメータ
+type YakiimoNotificationRequest struct {
 	// FinishedAt 焼き上がり時間
 	FinishedAt string `json:"finished_at"`
 
@@ -20,20 +47,23 @@ type RequestYakiimoNotification struct {
 	Quantity int `json:"quantity"`
 }
 
-// ResponseYakiimoNotification 焼き上がり通知正常レスポンス
-type ResponseYakiimoNotification struct {
+// YakiimoNotificationResponse 焼き上がり通知正常レスポンス
+type YakiimoNotificationResponse struct {
 	// Status 送信ステータス
 	Status string `json:"status"`
 }
 
 // PostNotifyReadyJSONRequestBody defines body for PostNotifyReady for application/json ContentType.
-type PostNotifyReadyJSONRequestBody = RequestYakiimoNotification
+type PostNotifyReadyJSONRequestBody = YakiimoNotificationRequest
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 	// 焼き芋の焼き上がりを通知
 	// (POST /notify/ready)
 	PostNotifyReady(ctx echo.Context) error
+	// 焼き芋通知をする会員の取得
+	// (GET /target-users)
+	GetTargetUsers(ctx echo.Context) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -47,6 +77,15 @@ func (w *ServerInterfaceWrapper) PostNotifyReady(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.PostNotifyReady(ctx)
+	return err
+}
+
+// GetTargetUsers converts echo context to params.
+func (w *ServerInterfaceWrapper) GetTargetUsers(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetTargetUsers(ctx)
 	return err
 }
 
@@ -79,5 +118,6 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	}
 
 	router.POST(baseURL+"/notify/ready", wrapper.PostNotifyReady)
+	router.GET(baseURL+"/target-users", wrapper.GetTargetUsers)
 
 }

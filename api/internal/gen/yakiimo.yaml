@@ -1,9 +1,25 @@
-openapi: "3.0,0"
+openapi: "3.0.0"
 info:
   title: 焼き芋通知焼き上がり通知
   version: 1.0.0
 
 paths:
+  /target-users:
+    get:
+      summary: 焼き芋通知をする会員の取得
+      responses:
+        200:
+          description: 対象会員取得成功レスポンス
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/targetUsersResponse"
+        500:
+          description: 対象会員取得異常終了レスポンス
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/targetUsersErrorResponse"
   /notify/ready:
     post:
       summary: 焼き芋の焼き上がりを通知
@@ -11,26 +27,66 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/requestYakiimoNotification"
+              $ref: "#/components/schemas/yakiimoNotificationRequest"
       responses:
         200:
           description: 焼き上がり通知正常レスポンス
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/responseYakiimoNotification"
+                $ref: "#/components/schemas/yakiimoNotificationResponse"
         500:
           description: 焼き上がり通知異常レスポンス
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/responseYakiimoNotification"
+                $ref: "#/components/schemas/yakiimoNotificationResponse"
 
 components:
   schemas:
-    requestYakiimoNotification:
+    targetUsersResponse:
+      description: 対象会員取得成功レスポンス
       type: object
+      properties:
+        status:
+          description: 処理終了ステータス
+          type: integer
+        users:
+          description: 対象会員
+          type: array
+          items:
+            $ref: "#/components/schemas/targetUserData"
+      required:
+        - status
+        - users
+    targetUserData:
+      description: 対象会員データ
+      type: object
+      properties:
+        user_id:
+          description: 会員ID
+          type: string
+          format: uuid
+        email:
+          description: メールアドレス
+          type: string
+        notification_permission:
+          description: 通知許可
+          type: boolean
+      required:
+        - user_id
+        - email
+        - notification_permission
+    targetUsersErrorResponse:
+      description: 対象会員取得成功レスポンス
+      type: object
+      properties:
+        message:
+          description: エラーメッセージ
+
+    yakiimoNotificationRequest:
       description: 焼き芋通知焼き上がり通知パラメータ
+      type: object
       properties:
         machine_id:
           type: string
@@ -46,7 +102,7 @@ components:
         - machine_id
         - finished_at
         - quantity
-    responseYakiimoNotification:
+    yakiimoNotificationResponse:
       type: object
       description: 焼き上がり通知正常レスポンス
       properties:
