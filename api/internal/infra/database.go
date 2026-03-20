@@ -3,6 +3,7 @@ package infra
 import (
 	"fmt"
 	"os"
+	"yakiimo-notifier/internal/domain"
 
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
@@ -33,6 +34,10 @@ func NewDB() (*gorm.DB, error) {
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=%s", cfg.host, cfg.user, cfg.pass, cfg.name, cfg.port, cfg.sslmode, cfg.timezone)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
+		return nil, err
+	}
+
+	if err := db.AutoMigrate(&domain.User{}); err != nil {
 		return nil, err
 	}
 

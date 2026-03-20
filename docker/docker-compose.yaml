@@ -5,7 +5,13 @@ services:
     image: postgres
     ports:
       - 5432:5432
+    volumes:
+      - yakiimo_data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: yakiimo-user
       POSTGRES_PASSWORD: yakiimo-pass
+      POSTGRES_DB: yakiimo-db
       TZ: Asia/Tokyo
+
+volumes:
+  yakiimo_data:

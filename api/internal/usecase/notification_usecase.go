@@ -1,6 +1,6 @@
 package usecase
 
-type NotificationUsecase struct {}
+type NotificationUsecase struct{}
 
 func NewNotificationUsecase() *NotificationUsecase {
 	return &NotificationUsecase{}
