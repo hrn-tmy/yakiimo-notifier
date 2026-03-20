@@ -1,0 +1,11 @@
+version: "3.8"
+
+services:
+  yakiimo-db:
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: yakiimo-user
+      POSTGRES_PASSWORD: yakiimo-pass
+      TZ: Asia/Tokyo
