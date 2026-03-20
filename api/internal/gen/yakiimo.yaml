@@ -4,6 +4,25 @@ info:
   version: 1.0.0
 
 paths:
+  /user:
+    post:
+      summary: 会員登録
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/createUserRequest"
+      responses:
+        201:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/createUserResponse"
+        500:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /target-users:
     get:
       summary: 焼き芋通知をする会員の取得
@@ -19,7 +38,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/targetUsersErrorResponse"
+                $ref: "#/components/schemas/ErrorResponse"
   /notify/ready:
     post:
       summary: 焼き芋の焼き上がりを通知
@@ -40,10 +59,73 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/yakiimoNotificationResponse"
+                $ref: "#/components/schemas/ErrorResponse"
 
 components:
   schemas:
+    createUserRequest:
+      description: 会員登録用パラメータ
+      type: object
+      properties:
+        name:
+          description: 名前
+          type: string
+        email:
+          description: メール
+          type: string
+          format: email
+        password:
+          description: パスワード
+          type: string
+      required:
+        - name
+        - email
+        - password
+    createUserResponse:
+      description: 会員登録成功レスポンス
+      type: object
+      properties:
+        status:
+          description: 処理終了ステータス
+          type: integer
+        user:
+          description: 会員データ
+          type: object
+          $ref: "#/components/schemas/createUserResponseData"
+      required:
+        - status
+        - user
+    createUserResponseData:
+      description: 会員データ
+      type: object
+      properties:
+        name:
+          description: 名前
+          type: string
+        email:
+          description: メール
+          type: string
+          format: email
+        password:
+          description: パスワード
+          type: string
+        notification_permission:
+          description: 通知許可
+          type: boolean
+      required:
+        - name
+        - email
+        - password
+        - notification_permission
+    createUserErrorResponse:
+      description: 会員登録失敗レスポンス
+      type: object
+      properties:
+        status:
+          description: 処理終了ステータス
+          type: integer
+        message:
+          description: エラーメッセージ
     targetUsersResponse:
       description: 対象会員取得成功レスポンス
       type: object
@@ -77,13 +159,6 @@ components:
         - user_id
         - email
         - notification_permission
-    targetUsersErrorResponse:
-      description: 対象会員取得成功レスポンス
-      type: object
-      properties:
-        message:
-          description: エラーメッセージ
-
     yakiimoNotificationRequest:
       description: 焼き芋通知焼き上がり通知パラメータ
       type: object
@@ -107,7 +182,23 @@ components:
       description: 焼き上がり通知正常レスポンス
       properties:
         status:
-          type: string
+          type: integer
           description: 送信ステータス
+        message:
+          type: string
+          description: エラーメッセージ
       required:
         - status
+    ErrorResponse:
+      description: エラーレスポンス
+      type: object
+      properties:
+        status:
+          type: integer
+          description: 送信ステータス
+        message:
+          type: string
+          description: エラーメッセージ
+      required:
+        - status
+        - message

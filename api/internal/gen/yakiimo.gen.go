@@ -8,6 +8,51 @@ import (
 	openapi_types "github.com/oapi-codegen/runtime/types"
 )
 
+// ErrorResponse エラーレスポンス
+type ErrorResponse struct {
+	// Message エラーメッセージ
+	Message string `json:"message"`
+
+	// Status 送信ステータス
+	Status int `json:"status"`
+}
+
+// CreateUserRequest 会員登録用パラメータ
+type CreateUserRequest struct {
+	// Email メール
+	Email openapi_types.Email `json:"email"`
+
+	// Name 名前
+	Name string `json:"name"`
+
+	// Password パスワード
+	Password string `json:"password"`
+}
+
+// CreateUserResponse 会員登録成功レスポンス
+type CreateUserResponse struct {
+	// Status 処理終了ステータス
+	Status int `json:"status"`
+
+	// User 会員データ
+	User CreateUserResponseData `json:"user"`
+}
+
+// CreateUserResponseData 会員データ
+type CreateUserResponseData struct {
+	// Email メール
+	Email openapi_types.Email `json:"email"`
+
+	// Name 名前
+	Name string `json:"name"`
+
+	// NotificationPermission 通知許可
+	NotificationPermission bool `json:"notification_permission"`
+
+	// Password パスワード
+	Password string `json:"password"`
+}
+
 // TargetUserData 対象会員データ
 type TargetUserData struct {
 	// Email メールアドレス
@@ -18,12 +63,6 @@ type TargetUserData struct {
 
 	// UserId 会員ID
 	UserId openapi_types.UUID `json:"user_id"`
-}
-
-// TargetUsersErrorResponse 対象会員取得成功レスポンス
-type TargetUsersErrorResponse struct {
-	// Message エラーメッセージ
-	Message interface{} `json:"message,omitempty"`
 }
 
 // TargetUsersResponse 対象会員取得成功レスポンス
@@ -49,12 +88,18 @@ type YakiimoNotificationRequest struct {
 
 // YakiimoNotificationResponse 焼き上がり通知正常レスポンス
 type YakiimoNotificationResponse struct {
+	// Message エラーメッセージ
+	Message *string `json:"message,omitempty"`
+
 	// Status 送信ステータス
-	Status string `json:"status"`
+	Status int `json:"status"`
 }
 
 // PostNotifyReadyJSONRequestBody defines body for PostNotifyReady for application/json ContentType.
 type PostNotifyReadyJSONRequestBody = YakiimoNotificationRequest
+
+// PostUserJSONRequestBody defines body for PostUser for application/json ContentType.
+type PostUserJSONRequestBody = CreateUserRequest
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
@@ -64,6 +109,9 @@ type ServerInterface interface {
 	// 焼き芋通知をする会員の取得
 	// (GET /target-users)
 	GetTargetUsers(ctx echo.Context) error
+	// 会員登録
+	// (POST /user)
+	PostUser(ctx echo.Context) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -86,6 +134,15 @@ func (w *ServerInterfaceWrapper) GetTargetUsers(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.GetTargetUsers(ctx)
+	return err
+}
+
+// PostUser converts echo context to params.
+func (w *ServerInterfaceWrapper) PostUser(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.PostUser(ctx)
 	return err
 }
 
@@ -119,5 +176,6 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 
 	router.POST(baseURL+"/notify/ready", wrapper.PostNotifyReady)
 	router.GET(baseURL+"/target-users", wrapper.GetTargetUsers)
+	router.POST(baseURL+"/user", wrapper.PostUser)
 
 }

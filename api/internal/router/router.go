@@ -15,6 +15,7 @@ func NewRouter(e *echo.Echo, userHandler handler.UserHandler, notificationHandle
 
 	user := e.Group("/users")
 	user.GET("", wrapper.GetTargetUsers)
+	user.POST("", wrapper.PostUser)
 
 	notify := e.Group("/notify")
 	notify.POST("/ready", wrapper.PostNotifyReady)
