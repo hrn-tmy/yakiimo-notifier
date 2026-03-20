@@ -20,7 +20,7 @@ type ErrorResponse struct {
 // CreateUserRequest 会員登録用パラメータ
 type CreateUserRequest struct {
 	// Email メール
-	Email openapi_types.Email `json:"email"`
+	Email string `json:"email"`
 
 	// Name 名前
 	Name string `json:"name"`
@@ -41,16 +41,13 @@ type CreateUserResponse struct {
 // CreateUserResponseData 会員データ
 type CreateUserResponseData struct {
 	// Email メール
-	Email openapi_types.Email `json:"email"`
+	Email string `json:"email"`
 
 	// Name 名前
 	Name string `json:"name"`
 
 	// NotificationPermission 通知許可
 	NotificationPermission bool `json:"notification_permission"`
-
-	// Password パスワード
-	Password string `json:"password"`
 }
 
 // TargetUserData 対象会員データ

@@ -73,7 +73,6 @@ components:
         email:
           description: メール
           type: string
-          format: email
         password:
           description: パスワード
           type: string
@@ -105,17 +104,12 @@ components:
         email:
           description: メール
           type: string
-          format: email
-        password:
-          description: パスワード
-          type: string
         notification_permission:
           description: 通知許可
           type: boolean
       required:
         - name
         - email
-        - password
         - notification_permission
     createUserErrorResponse:
       description: 会員登録失敗レスポンス

@@ -40,7 +40,7 @@ func validateCreateUser(req gen.CreateUserRequest) string {
 	if utf8.RuneCountInString(req.Password) > 20 {
 		errs = append(errs, fmt.Sprintf(constant.MaxLength, constant.Password, 20))
 	}
-	if validatePasswordKinds(req.Password) {
+	if !validatePasswordKinds(req.Password) {
 		errs = append(errs, constant.PasswordKind)
 	}
 
@@ -55,30 +55,30 @@ func validatePasswordKinds(password string) bool {
 	var hasUpper, hasLower, hasDigit, hasSymbol bool
 	for _, p := range password {
 		switch {
-			case unicode.IsUpper(p):
-				hasUpper = true
-			case unicode.IsLower(p):
-				hasLower = true
-			case unicode.IsDigit(p):
-				hasDigit = true
-			default:
-				hasSymbol = true
+		case unicode.IsUpper(p):
+			hasUpper = true
+		case unicode.IsLower(p):
+			hasLower = true
+		case unicode.IsDigit(p):
+			hasDigit = true
+		default:
+			hasSymbol = true
 		}
 	}
 
 	var count int
-		if hasUpper {
-			count++
-		}
-		if hasLower {
-			count++
-		}
-		if hasDigit {
-			count++
-		}
-		if hasSymbol {
-			count++
-		}
+	if hasUpper {
+		count++
+	}
+	if hasLower {
+		count++
+	}
+	if hasDigit {
+		count++
+	}
+	if hasSymbol {
+		count++
+	}
 
 	return count >= 3
 }

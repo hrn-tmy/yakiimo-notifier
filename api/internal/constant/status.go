@@ -2,5 +2,5 @@ package constant
 
 const (
 	SuccessStatus = 0
-	ErrorStatus = 99
+	ErrorStatus   = 99
 )

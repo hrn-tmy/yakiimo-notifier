@@ -7,10 +7,10 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func ErrorResponse(ctx echo.Context, httpStatus int) error {
+func ErrorResponse(ctx echo.Context, message string, httpStatus int) error {
 	res := gen.ErrorResponse{
-		Status: constant.ErrorStatus,
-		Message: "処理に失敗しました。",
+		Status:  constant.ErrorStatus,
+		Message: message,
 	}
 	return ctx.JSON(httpStatus, res)
 }
