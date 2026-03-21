@@ -5,7 +5,6 @@ package gen
 
 import (
 	"github.com/labstack/echo/v4"
-	openapi_types "github.com/oapi-codegen/runtime/types"
 )
 
 // ErrorResponse エラーレスポンス
@@ -50,27 +49,6 @@ type CreateUserResponseData struct {
 	NotificationPermission bool `json:"notification_permission"`
 }
 
-// TargetUserData 対象会員データ
-type TargetUserData struct {
-	// Email メールアドレス
-	Email string `json:"email"`
-
-	// NotificationPermission 通知許可
-	NotificationPermission bool `json:"notification_permission"`
-
-	// UserId 会員ID
-	UserId openapi_types.UUID `json:"user_id"`
-}
-
-// TargetUsersResponse 対象会員取得成功レスポンス
-type TargetUsersResponse struct {
-	// Status 処理終了ステータス
-	Status int `json:"status"`
-
-	// Users 対象会員
-	Users []TargetUserData `json:"users"`
-}
-
 // YakiimoNotificationRequest 焼き芋通知焼き上がり通知パラメータ
 type YakiimoNotificationRequest struct {
 	// FinishedAt 焼き上がり時間
@@ -103,9 +81,6 @@ type ServerInterface interface {
 	// 焼き芋の焼き上がりを通知
 	// (POST /notify/ready)
 	PostNotifyReady(ctx echo.Context) error
-	// 焼き芋通知をする会員の取得
-	// (GET /target-users)
-	GetTargetUsers(ctx echo.Context) error
 	// 会員登録
 	// (POST /user)
 	PostUser(ctx echo.Context) error
@@ -122,15 +97,6 @@ func (w *ServerInterfaceWrapper) PostNotifyReady(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.PostNotifyReady(ctx)
-	return err
-}
-
-// GetTargetUsers converts echo context to params.
-func (w *ServerInterfaceWrapper) GetTargetUsers(ctx echo.Context) error {
-	var err error
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetTargetUsers(ctx)
 	return err
 }
 
@@ -172,7 +138,6 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	}
 
 	router.POST(baseURL+"/notify/ready", wrapper.PostNotifyReady)
-	router.GET(baseURL+"/target-users", wrapper.GetTargetUsers)
 	router.POST(baseURL+"/user", wrapper.PostUser)
 
 }

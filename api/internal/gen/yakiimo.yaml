@@ -23,22 +23,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
-  /target-users:
-    get:
-      summary: 焼き芋通知をする会員の取得
-      responses:
-        200:
-          description: 対象会員取得成功レスポンス
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/targetUsersResponse"
-        500:
-          description: 対象会員取得異常終了レスポンス
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrorResponse"
   /notify/ready:
     post:
       summary: 焼き芋の焼き上がりを通知
@@ -120,39 +104,6 @@ components:
           type: integer
         message:
           description: エラーメッセージ
-    targetUsersResponse:
-      description: 対象会員取得成功レスポンス
-      type: object
-      properties:
-        status:
-          description: 処理終了ステータス
-          type: integer
-        users:
-          description: 対象会員
-          type: array
-          items:
-            $ref: "#/components/schemas/targetUserData"
-      required:
-        - status
-        - users
-    targetUserData:
-      description: 対象会員データ
-      type: object
-      properties:
-        user_id:
-          description: 会員ID
-          type: string
-          format: uuid
-        email:
-          description: メールアドレス
-          type: string
-        notification_permission:
-          description: 通知許可
-          type: boolean
-      required:
-        - user_id
-        - email
-        - notification_permission
     yakiimoNotificationRequest:
       description: 焼き芋通知焼き上がり通知パラメータ
       type: object
