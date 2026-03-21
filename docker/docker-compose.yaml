@@ -13,5 +13,13 @@ services:
       POSTGRES_DB: yakiimo-db
       TZ: Asia/Tokyo
 
+  localstack:
+    image: localstack/localstack
+    ports:
+      - 4566:4566
+    environment:
+      - SERVICES=ses
+      - AWS_DEFAULT_REGION=ap-northeast-1
+
 volumes:
   yakiimo_data:
