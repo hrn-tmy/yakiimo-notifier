@@ -7,6 +7,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// NewRouter　はルーティングの初期化を行います
 func NewRouter(e *echo.Echo, userHandler handler.UserHandler, notificationHandler handler.NotificationHandler) {
 	h := handler.NewHandler(userHandler, notificationHandler)
 	wrapper := gen.ServerInterfaceWrapper{

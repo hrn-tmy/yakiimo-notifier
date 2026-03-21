@@ -12,10 +12,12 @@ type UserUsecase struct {
 	repo repository.IUserRepository
 }
 
+// NewUserUsecase はUserUsecaseを生成します
 func NewUserUsecase(repo repository.IUserRepository) *UserUsecase {
 	return &UserUsecase{repo: repo}
 }
 
+// CreateUser は会員登録を実行します
 func (uu *UserUsecase) CreateUser(email, name, password string) (gen.CreateUserResponseData, error) {
 	userID, err := uuid.NewV7()
 	if err != nil {

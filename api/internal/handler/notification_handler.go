@@ -12,10 +12,12 @@ type NotificationHandler struct {
 	uc *usecase.NotificationUsecase
 }
 
+// NewNotificationHandler はNotificationHandlerを生成します
 func NewNotificationHandler(uc *usecase.NotificationUsecase) *NotificationHandler {
 	return &NotificationHandler{uc: uc}
 }
 
+// PostNotifyReady は焼き上がり通知リクエストを処理し、対象会員にメールを送信します
 func (nh *NotificationHandler) PostNotifyReady(ctx echo.Context) error {
 	var req gen.PostNotifyReadyJSONRequestBody
 	if err := ctx.Bind(&req); err != nil {

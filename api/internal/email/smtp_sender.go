@@ -12,10 +12,12 @@ type SMTPSender struct {
 	from string
 }
 
+// NewSMTPSender はSMTPSenderを生成します
 func NewSMTPSender(host, port, from string) *SMTPSender {
 	return &SMTPSender{host: host, port: port, from: from}
 }
 
+// Send はSMTPを使ってメールを送信します
 func (s *SMTPSender) Send(to []string, subject, body string) error {
 	addr := fmt.Sprintf("%s:%s", s.host, s.port)
 	msg := fmt.Sprintf(

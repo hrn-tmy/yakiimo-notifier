@@ -14,10 +14,12 @@ type SESSender struct {
 	from string
 }
 
+// NewSESSender はSESSenderを生成します
 func NewSESSender(from string) *SESSender {
 	return &SESSender{from: from}
 }
 
+// Send はAWS SESを使ってメールを送信します
 func (s *SESSender) Send(to []string, subject, body string) error {
 	optFns := []func(*config.LoadOptions) error{
 		config.WithRegion(os.Getenv("AWS_REGION")),

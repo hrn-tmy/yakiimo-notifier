@@ -13,10 +13,12 @@ type UserHandler struct {
 	uc *usecase.UserUsecase
 }
 
+// NewUserHandler はUserHandlerを生成します
 func NewUserHandler(uc *usecase.UserUsecase) *UserHandler {
 	return &UserHandler{uc: uc}
 }
 
+// PostUser は会員登録リクエストを処理します
 func (uh *UserHandler) PostUser(ctx echo.Context) error {
 	var req gen.CreateUserRequest
 	if err := ctx.Bind(&req); err != nil {
@@ -38,8 +40,4 @@ func (uh *UserHandler) PostUser(ctx echo.Context) error {
 	}
 
 	return ctx.JSON(http.StatusCreated, res)
-}
-
-func (uh *UserHandler) GetTargetUsers(ctx echo.Context) error {
-	return ctx.JSON(http.StatusOK, nil)
 }

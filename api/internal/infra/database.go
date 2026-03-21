@@ -20,6 +20,7 @@ type DBConfig struct {
 	timezone string
 }
 
+// NewDB　はDBの初期化を行います
 func NewDB() (*gorm.DB, error) {
 	godotenv.Load()
 	cfg := DBConfig{

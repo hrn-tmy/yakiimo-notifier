@@ -10,6 +10,7 @@ import (
 	"yakiimo-notifier/internal/gen"
 )
 
+// validateCreateUser は会員登録リクエストのバリデーションを行い、エラーメッセージを返します
 func validateCreateUser(req gen.CreateUserRequest) string {
 	errs := make([]string, 0)
 
@@ -51,6 +52,7 @@ func validateCreateUser(req gen.CreateUserRequest) string {
 	return ""
 }
 
+// validateNotifyReady は焼き上がり通知リクエストのバリデーションを行い、エラーメッセージを返します
 func validateNotifyReady(req gen.PostNotifyReadyJSONRequestBody) string {
 	var errs []string
 	if req.MachineId == "" {
@@ -70,6 +72,7 @@ func validateNotifyReady(req gen.PostNotifyReadyJSONRequestBody) string {
 	return ""
 }
 
+// validatePasswordKinds はパスワードが大文字・小文字・数字・記号のうち3種類以上を含むか検証します
 func validatePasswordKinds(password string) bool {
 	var hasUpper, hasLower, hasDigit, hasSymbol bool
 	for _, p := range password {
