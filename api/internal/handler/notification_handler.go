@@ -27,5 +27,10 @@ func (nh *NotificationHandler) PostNotifyReady(ctx echo.Context) error {
 		return ErrorResponse(ctx, message, http.StatusBadRequest)
 	}
 
-	return ctx.JSON(http.StatusOK, nil)
+	targets, err := nh.uc.GetTargetUsers(req.MachineId)
+	if err != nil {
+		return ErrorResponse(ctx, err.Error(), http.StatusInternalServerError)
+	}
+
+	return ctx.JSON(http.StatusOK, targets)
 }

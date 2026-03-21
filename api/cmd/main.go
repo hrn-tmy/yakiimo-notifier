@@ -18,11 +18,11 @@ func main() {
 		slog.Error(err.Error())
 		os.Exit(1)
 	}
-	repo := repository.NewUserRepository(db)
-	userUC := usecase.NewUserUsecase(repo)
+	userRepo := repository.NewUserRepository(db)
+	userUC := usecase.NewUserUsecase(userRepo)
 	userHandler := handler.NewUserHandler(userUC)
 
-	notificationUC := usecase.NewNotificationUsecase()
+	notificationUC := usecase.NewNotificationUsecase(userRepo)
 	notificationHandler := handler.NewNotificationHandler(notificationUC)
 
 	e := echo.New()

@@ -10,6 +10,7 @@ import (
 
 type IUserRepository interface {
 	CreateUser(userID uuid.UUID, email, name, password string) (domain.User, error)
+	GetTargetUsers(machineID string) ([]string, error)
 }
 
 type UserRepository struct {
@@ -36,4 +37,20 @@ func (ur *UserRepository) CreateUser(userID uuid.UUID, email, name, password str
 	}
 
 	return user, nil
+}
+
+func (ur *UserRepository) GetTargetUsers(machineID string) ([]string, error) {
+	var targets []string
+	err := ur.db.Table("favorites").
+		Select("users.email").
+		Joins("JOIN users ON users.user_id = favorites.user_id").
+		Where("favorites.machine_id = ?", machineID).
+		Where("notification_permission = ?", "TRUE").
+		Scan(&targets).
+		Error
+	if err != nil {
+		return nil, err
+	}
+
+	return targets, nil
 }
