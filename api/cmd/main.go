@@ -3,6 +3,7 @@ package main
 import (
 	"log/slog"
 	"os"
+	"yakiimo-notifier/internal/email"
 	"yakiimo-notifier/internal/handler"
 	"yakiimo-notifier/internal/infra"
 	"yakiimo-notifier/internal/repository"
@@ -22,7 +23,18 @@ func main() {
 	userUC := usecase.NewUserUsecase(userRepo)
 	userHandler := handler.NewUserHandler(userUC)
 
-	notificationUC := usecase.NewNotificationUsecase(userRepo)
+	var mailer email.Sender
+	if os.Getenv("EMAIL_DRIVER") == "smtp" {
+		mailer = email.NewSMTPSender(
+			os.Getenv("SMTP_HOST"),
+			os.Getenv("SMTP_PORT"),
+			os.Getenv("SMTP_FROM"),
+		)
+	} else {
+		mailer = email.NewSESSender(os.Getenv("SES_FROM"))
+	}
+
+	notificationUC := usecase.NewNotificationUsecase(userRepo, mailer)
 	notificationHandler := handler.NewNotificationHandler(notificationUC)
 
 	e := echo.New()
