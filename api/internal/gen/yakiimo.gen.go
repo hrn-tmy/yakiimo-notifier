@@ -77,7 +77,7 @@ type YakiimoNotificationRequest struct {
 	FinishedAt string `json:"finished_at"`
 
 	// MachineId 機械ID
-	MachineId openapi_types.UUID `json:"machine_id"`
+	MachineId string `json:"machine_id"`
 
 	// Quantity 焼き上がり個数
 	Quantity int `json:"quantity"`

@@ -51,6 +51,25 @@ func validateCreateUser(req gen.CreateUserRequest) string {
 	return ""
 }
 
+func validateNotifyReady(req gen.PostNotifyReadyJSONRequestBody) string {
+	var errs []string
+	if req.MachineId == "" {
+		errs = append(errs, fmt.Sprintf(constant.Required, constant.MachineID))
+	}
+	if req.FinishedAt == "" {
+		errs = append(errs, fmt.Sprintf(constant.Required, constant.FinishedAt))
+	}
+	if req.Quantity <= 0 {
+		errs = append(errs, fmt.Sprintf(constant.Min, constant.Quantity, 1))
+	}
+
+	if len(errs) > 0 {
+		return strings.Join(errs, ",")
+	}
+
+	return ""
+}
+
 func validatePasswordKinds(password string) bool {
 	var hasUpper, hasLower, hasDigit, hasSymbol bool
 	for _, p := range password {

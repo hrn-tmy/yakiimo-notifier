@@ -159,7 +159,6 @@ components:
       properties:
         machine_id:
           type: string
-          format: uuid
           description: 機械ID
         finished_at:
           type: string
